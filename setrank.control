@@ -1,0 +1,4 @@
+comment = 'Rank using set of documents'
+default_version = '1.0'
+module_pathname = '$libdir/setrank'
+relocatable = true

@@ -1,0 +1,123 @@
+CREATE EXTENSION setrank;
+SELECT 'l_' || i::text AS l, i AS n INTO ts  FROM generate_series(1,100) AS i;
+INSERT INTO ts VALUES (NULL, 100);
+SELECT get_idf('ts', 'l_1'); 
+     get_idf      
+------------------
+ 4.60517018598809
+(1 row)
+
+SELECT get_idf('ts', 'l_10'); 
+     get_idf      
+------------------
+ 2.30258509299405
+(1 row)
+
+SELECT get_idf('ts', 'l_50'); 
+      get_idf      
+-------------------
+ 0.693147180559945
+(1 row)
+
+SELECT get_idf('ts', 'l_99'); 
+      get_idf       
+--------------------
+ 0.0100503358535015
+(1 row)
+
+SELECT get_idf('ts', 'x'); 
+     get_idf      
+------------------
+ 4.60517018598809
+(1 row)
+
+SELECT ts_rank_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_2');
+ ts_rank_tfidf 
+---------------
+     0.0645531
+(1 row)
+
+SELECT ts_rank_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'x');
+ ts_rank_tfidf 
+---------------
+     0.0759909
+(1 row)
+
+SELECT ts_rank_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_99');
+ ts_rank_tfidf 
+---------------
+   0.000165843
+(1 row)
+
+SELECT ts_rank_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_2 & l_99');
+ ts_rank_tfidf 
+---------------
+      0.018035
+(1 row)
+
+SELECT ts_rank_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_2 | l_99');
+ ts_rank_tfidf 
+---------------
+     0.0323595
+(1 row)
+
+SELECT ts_rank_cd_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_2');
+ ts_rank_cd_tfidf 
+------------------
+         0.166863
+(1 row)
+
+SELECT ts_rank_cd_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'x');
+ ts_rank_cd_tfidf 
+------------------
+         0.196429
+(1 row)
+
+SELECT ts_rank_cd_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_99');
+ ts_rank_cd_tfidf 
+------------------
+      0.000428687
+(1 row)
+
+SELECT ts_rank_cd_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_2 & l_99');
+ ts_rank_cd_tfidf 
+------------------
+      0.000855177
+(1 row)
+
+SELECT ts_rank_cd_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_2 | l_99');
+ ts_rank_cd_tfidf 
+------------------
+         0.167292
+(1 row)
+
+SELECT ts_score_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_2');
+ ts_score_tfidf 
+----------------
+      0.0634005
+(1 row)
+
+SELECT ts_score_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'x');
+ ts_score_tfidf 
+----------------
+      0.0746341
+(1 row)
+
+SELECT ts_score_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_99');
+ ts_score_tfidf 
+----------------
+    0.000162882
+(1 row)
+
+SELECT ts_score_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_2 & l_99');
+ ts_score_tfidf 
+----------------
+     0.00103977
+(1 row)
+
+SELECT ts_score_tfidf('ts', 'l_2:2,5 x:3,4 l_99:1,6', 'l_2 | l_99');
+ ts_score_tfidf 
+----------------
+      0.0635634
+(1 row)
+

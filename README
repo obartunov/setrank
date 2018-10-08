@@ -1,0 +1,16 @@
+float4 ts_rank_tfidf(text STATTABLE
+					  [, float4[] weights]
+					  tsvector,
+					  tsquery
+					  [, int flags])
+
+STATTABLE:
+    Name of table stored set-wide statistic. Table should be
+	defined as
+	CREATE TABLE table_name (
+			value   text UNIQUE,
+			ndoc    int4 (or bigint)  NOT NULL CHECK (ndoc>0)
+	);
+	And row with null value means total number of documents.
+	See an examples in sql/setrank.sql file
+
