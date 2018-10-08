@@ -14,3 +14,53 @@ STATTABLE:
 	And row with null value means total number of documents.
 	See an examples in sql/setrank.sql file
 
+example:
+
+Create STATTABLE:
+
+                 Table "public.apod"
+  Column  |   Type   | Collation | Nullable | Default
+----------+----------+-----------+----------+---------
+ title    | text     |           |          |
+ body     | text     |           |          |
+ sdate    | date     |           |          |
+ keywords | text     |           |          |
+ id       | integer  |           |          |
+ fts      | tsvector |           |          |
+Indexes:
+
+select word, ndoc into apod_stat  from ts_stat('select fts from apod') order by ndoc desc;
+insert into apod_stat values(NULL, 1754);
+
+-- 'star' is very common word
+
+select title, ts_rank_tfidf('apod_stat', fts, to_tsquery('x-ray:a | star:a')) as rank from apod where fts @@ to_tsquery('x-ray:a| star:a') order by rank desc limit 10;
+                    title                    |   rank
+---------------------------------------------+----------
+ X-ray Moon and X-ray Star                   | 0.218907
+ X-Ray Pulsar                                |   0.1818
+ The X-Ray Sky                               | 0.178291
+ X-Ray Pleiades                              | 0.177293
+ X-Ray Pleiades                              | 0.177293
+ X-Ray Pleiades                              | 0.177293
+ XMM-Newton First Light: X-Rays From The LMC | 0.176329
+ The X-ray Timing Explorer                   | 0.175857
+ X-Rays From The Galactic Center             | 0.175857
+ X-Ray Jet From Centaurus A                  | 0.175523
+(10 rows)
+
+
+select title, ts_rank_cd(fts, to_tsquery('x-ray:a | star:a')) as rank from apod where fts @@ to_tsquery('x-ray:a| star:a') order by rank desc limit 10;
+           title            |  rank
+----------------------------+---------
+ X-ray Moon and X-ray Star  | 3.66667
+ X-Ray Stars Of Orion       |       2
+ The Pleiades Star Cluster  |       1
+ X-Ray Jet From Centaurus A |       1
+ Star Wars in NGC 664       |       1
+ The Pleiades Star Cluster  |       1
+ Stars in the Infrared Sky  |       1
+ The X-Ray Moon             |       1
+ The Pleiades Star Cluster  |       1
+ The Crab Nebula in X-Rays  |       1
+(10 rows)
